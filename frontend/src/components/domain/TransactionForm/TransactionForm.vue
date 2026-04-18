@@ -73,7 +73,6 @@ const isSubmitDisabled = computed(
   () =>
     props.isSubmitting ||
     !form.type ||
-    !form.description.trim() ||
     !form.accountId ||
     (isTransfer.value
       ? !form.destinationAccountId || form.accountId === form.destinationAccountId
@@ -130,7 +129,7 @@ function handleSubmit() {
   emit('submit', {
     type: form.type as TransactionType,
     amount: getRawAmount(form.amount),
-    description: form.description || undefined,
+    description: form.description.trim() || undefined,
     occurredAt: new Date(form.occurredAt).toISOString(),
     accountId: form.accountId,
     destinationAccountId: isTransfer.value ? form.destinationAccountId : undefined,
@@ -231,7 +230,6 @@ function handleSubmit() {
         <span class="text-sm font-medium text-ink/70">Description</span>
         <input
           v-model="form.description"
-          required
           type="text"
           placeholder="What was this for?"
           class="mt-2 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm"

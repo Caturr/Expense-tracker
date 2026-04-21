@@ -7,6 +7,7 @@ import { AccountsModule } from './modules/accounts/accounts.module';
 import { BudgetsModule } from './modules/budgets/budgets.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { ReportsModule } from './modules/reports/reports.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     PrismaModule,
     AuthModule,
     DashboardModule,
+    ReportsModule,
     TransactionsModule,
     AccountsModule,
     CategoriesModule,

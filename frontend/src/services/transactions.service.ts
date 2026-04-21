@@ -1,6 +1,7 @@
 import { apiClient } from './api-client';
 import type {
   Account,
+  AccountPurpose,
   AccountType,
   Category,
   TransactionFilters,
@@ -15,6 +16,7 @@ interface BackendAccount {
   id: string;
   name: string;
   type: AccountType;
+  purpose?: AccountPurpose;
   balance: BackendAmount;
 }
 
@@ -57,6 +59,7 @@ function mapAccount(account: BackendAccount): Account {
     id: account.id,
     name: account.name,
     type: account.type,
+    purpose: account.purpose ?? 'OPERATIONAL',
     balance: toNumber(account.balance),
   };
 }

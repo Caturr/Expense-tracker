@@ -9,14 +9,14 @@ export function useDashboard() {
   const isLoading = ref(false);
   const isSaving = ref(false);
   const error = ref<string | null>(null);
+  const availableBalance = ref(0);
+  const savingsBalance = ref(0);
   const totalIncome = ref(0);
   const totalExpense = ref(0);
 
   const accounts = computed(() => financeStore.accounts);
   const categories = computed(() => financeStore.categories);
   const transactions = computed(() => financeStore.transactions);
-  const totalBalance = computed(() => financeStore.totalBalance);
-
   async function refreshDashboard() {
     isLoading.value = true;
     error.value = null;
@@ -24,6 +24,8 @@ export function useDashboard() {
     try {
       const data = await getDashboardData();
       financeStore.setDashboardData(data);
+      availableBalance.value = data.availableBalance;
+      savingsBalance.value = data.savingsBalance;
       totalIncome.value = data.totalIncome;
       totalExpense.value = data.totalExpense;
     } catch {
@@ -56,7 +58,8 @@ export function useDashboard() {
     accounts,
     categories,
     transactions,
-    totalBalance,
+    availableBalance,
+    savingsBalance,
     totalIncome,
     totalExpense,
     isLoading,

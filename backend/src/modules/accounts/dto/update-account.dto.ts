@@ -1,4 +1,4 @@
-import { AccountType } from '@prisma/client';
+import { AccountPurpose, AccountType } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class UpdateAccountDto {
@@ -9,6 +9,10 @@ export class UpdateAccountDto {
   @IsOptional()
   @IsEnum(AccountType)
   type?: AccountType;
+
+  @IsOptional()
+  @IsEnum(AccountPurpose)
+  purpose?: AccountPurpose;
 
   @IsOptional()
   @IsNumber()

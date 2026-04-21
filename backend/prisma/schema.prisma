@@ -21,6 +21,11 @@ enum AccountType {
   OTHER
 }
 
+enum AccountPurpose {
+  OPERATIONAL
+  SAVINGS
+}
+
 model User {
   id           String        @id @default(uuid())
   email        String        @unique
@@ -37,32 +42,33 @@ model User {
 }
 
 model Account {
-  id                     String        @id @default(uuid())
-  userId                 String
-  name                   String
-  type                   AccountType   @default(CASH)
-  balance                Decimal       @default(0) @db.Decimal(12, 2)
-  user                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions           Transaction[] @relation("SourceAccountTransactions")
-  incomingTransfers      Transaction[] @relation("DestinationAccountTransfers")
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
+  id                String         @id @default(uuid())
+  userId            String
+  name              String
+  type              AccountType    @default(CASH)
+  purpose           AccountPurpose @default(OPERATIONAL)
+  balance           Decimal        @default(0) @db.Decimal(12, 2)
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]  @relation("SourceAccountTransactions")
+  incomingTransfers Transaction[]  @relation("DestinationAccountTransfers")
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   @@index([userId])
   @@map("accounts")
 }
 
 model Category {
-  id           String        @id @default(uuid())
+  id           String          @id @default(uuid())
   userId       String
   name         String
   type         TransactionType @default(EXPENSE)
   color        String?
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
   budgets      Budget[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 
   @@index([userId])
   @@map("categories")
@@ -94,17 +100,17 @@ model Transaction {
 }
 
 model Budget {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   userId     String
   name       String
-  amount     Decimal  @db.Decimal(12, 2)
+  amount     Decimal   @db.Decimal(12, 2)
   startsAt   DateTime
   endsAt     DateTime
   categoryId String?
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@index([userId])
   @@index([categoryId])

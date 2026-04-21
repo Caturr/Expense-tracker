@@ -17,7 +17,8 @@ const {
   accounts,
   categories,
   transactions,
-  totalBalance,
+  availableBalance,
+  savingsBalance,
   totalIncome,
   totalExpense,
   isLoading,
@@ -49,8 +50,9 @@ async function handleCreateTransaction(values: TransactionFormValues) {
       </template>
     </PageHeader>
 
-    <div class="grid gap-4 md:grid-cols-3">
-      <StatCard label="Balance" :value="formatCurrency(totalBalance)" icon="wallet" />
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <StatCard label="Available Balance" :value="formatCurrency(availableBalance)" icon="wallet" />
+      <StatCard label="Savings Balance" :value="formatCurrency(savingsBalance)" icon="wallet" />
       <StatCard label="Income" :value="formatCurrency(totalIncome)" icon="trending-up" tone="positive" />
       <StatCard label="Expense" :value="formatCurrency(totalExpense)" icon="trending-down" tone="negative" />
     </div>

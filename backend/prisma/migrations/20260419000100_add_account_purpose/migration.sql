@@ -1,0 +1,3 @@
+CREATE TYPE "AccountPurpose" AS ENUM ('OPERATIONAL', 'SAVINGS');
+
+ALTER TABLE "accounts" ADD COLUMN "purpose" "AccountPurpose" NOT NULL DEFAULT 'OPERATIONAL';

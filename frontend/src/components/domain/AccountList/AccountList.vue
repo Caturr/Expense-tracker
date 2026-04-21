@@ -44,7 +44,7 @@ function getAccountIcon(type: Account['type']) {
           </span>
           <div>
             <h3 class="font-semibold text-ink">{{ account.name }}</h3>
-            <p class="mt-1 text-sm text-ink/55">{{ account.type }}</p>
+            <p class="mt-1 text-sm text-ink/55">{{ account.type }} - {{ account.purpose }}</p>
           </div>
         </div>
         <span class="rounded-md bg-mint/10 px-2 py-1 text-xs font-semibold text-mint">

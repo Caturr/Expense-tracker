@@ -1,5 +1,5 @@
 import { apiClient } from './api-client';
-import type { Account, Category, Transaction, TransactionType, AccountType } from '@/types/finance';
+import type { Account, Category, Transaction, TransactionType, AccountPurpose, AccountType } from '@/types/finance';
 
 type BackendAmount = number | string;
 
@@ -7,6 +7,7 @@ interface BackendAccount {
   id: string;
   name: string;
   type: AccountType;
+  purpose?: AccountPurpose;
   balance: BackendAmount;
 }
 
@@ -30,6 +31,8 @@ interface BackendTransaction {
 
 interface BackendDashboardSummary {
   totals: {
+    availableBalance?: BackendAmount;
+    savingsBalance?: BackendAmount;
     income: BackendAmount;
     expense: BackendAmount;
   };
@@ -42,6 +45,8 @@ export interface DashboardData {
   transactions: Transaction[];
   totalIncome: number;
   totalExpense: number;
+  availableBalance: number;
+  savingsBalance: number;
 }
 
 function toNumber(value: BackendAmount) {
@@ -53,6 +58,7 @@ function mapAccount(account: BackendAccount): Account {
     id: account.id,
     name: account.name,
     type: account.type,
+    purpose: account.purpose ?? 'OPERATIONAL',
     balance: toNumber(account.balance),
   };
 }
@@ -92,5 +98,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     transactions: summary.recentTransactions.map(mapTransaction),
     totalIncome: toNumber(summary.totals.income),
     totalExpense: toNumber(summary.totals.expense),
+    availableBalance: toNumber(summary.totals.availableBalance ?? 0),
+    savingsBalance: toNumber(summary.totals.savingsBalance ?? 0),
   };
 }

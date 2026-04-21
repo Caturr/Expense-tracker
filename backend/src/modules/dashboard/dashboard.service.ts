@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, TransactionType } from '@prisma/client';
+import { AccountPurpose, Prisma, TransactionType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { DashboardQueryDto } from './dto/dashboard-query.dto';
 
@@ -16,7 +16,16 @@ export class DashboardService {
           }
         : undefined;
 
-    const [income, expense, recentTransactions, accountCount, categoryCount, budgetCount] =
+    const [
+      income,
+      expense,
+      availableBalance,
+      savingsBalance,
+      recentTransactions,
+      accountCount,
+      categoryCount,
+      budgetCount,
+    ] =
       await this.prisma.$transaction([
         this.prisma.transaction.aggregate({
           where: {
@@ -33,6 +42,20 @@ export class DashboardService {
             occurredAt,
           },
           _sum: { amount: true },
+        }),
+        this.prisma.account.aggregate({
+          where: {
+            userId,
+            purpose: AccountPurpose.OPERATIONAL,
+          },
+          _sum: { balance: true },
+        }),
+        this.prisma.account.aggregate({
+          where: {
+            userId,
+            purpose: AccountPurpose.SAVINGS,
+          },
+          _sum: { balance: true },
         }),
         this.prisma.transaction.findMany({
           where: { userId, occurredAt },
@@ -51,6 +74,8 @@ export class DashboardService {
 
     return {
       totals: {
+        availableBalance: availableBalance._sum.balance ?? 0,
+        savingsBalance: savingsBalance._sum.balance ?? 0,
         income: income._sum.amount ?? 0,
         expense: expense._sum.amount ?? 0,
       },

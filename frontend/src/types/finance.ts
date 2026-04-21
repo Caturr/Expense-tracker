@@ -2,16 +2,20 @@ export type TransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
 
 export type AccountType = 'CASH' | 'BANK' | 'EWALLET' | 'CREDIT_CARD' | 'OTHER';
 
+export type AccountPurpose = 'OPERATIONAL' | 'SAVINGS';
+
 export interface Account {
   id: string;
   name: string;
   type: AccountType;
+  purpose: AccountPurpose;
   balance: number;
 }
 
 export interface AccountFormValues {
   name: string;
   type: AccountType;
+  purpose: AccountPurpose;
   balance: number;
 }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
 import BaseButton from '@/components/ui/BaseButton/BaseButton.vue';
-import type { Account, AccountFormValues, AccountType } from '@/types/finance';
+import type { Account, AccountFormValues, AccountPurpose, AccountType } from '@/types/finance';
 
 const props = defineProps<{
   account?: Account | null;
@@ -16,6 +16,7 @@ const emit = defineEmits<{
 const form = reactive({
   name: '',
   type: 'CASH' as AccountType,
+  purpose: 'OPERATIONAL' as AccountPurpose,
   balance: '',
 });
 
@@ -43,6 +44,7 @@ watch(
   (account) => {
     form.name = account?.name ?? '';
     form.type = account?.type ?? 'CASH';
+    form.purpose = account?.purpose ?? 'OPERATIONAL';
     form.balance = formatBalance(account?.balance ?? 0);
   },
   { immediate: true },
@@ -61,6 +63,7 @@ function handleSubmit() {
   emit('submit', {
     name: form.name.trim(),
     type: form.type,
+    purpose: form.purpose,
     balance: getRawBalance(form.balance),
   });
 }
@@ -68,7 +71,7 @@ function handleSubmit() {
 
 <template>
   <form class="rounded-lg border border-ink/10 bg-white p-4 shadow-soft sm:p-5" @submit.prevent="handleSubmit">
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-2">
       <label class="block">
         <span class="text-sm font-medium text-ink/70">Name</span>
         <input
@@ -92,6 +95,18 @@ function handleSubmit() {
           <option value="EWALLET">E-Wallet</option>
           <option value="CREDIT_CARD">Credit Card</option>
           <option value="OTHER">Other</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium text-ink/70">Purpose</span>
+        <select
+          v-model="form.purpose"
+          required
+          class="mt-2 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm"
+        >
+          <option value="OPERATIONAL">Operational</option>
+          <option value="SAVINGS">Savings</option>
         </select>
       </label>
 
